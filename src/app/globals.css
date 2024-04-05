@@ -1,6 +1,18 @@
+@import 'flexlayout-react/style/dark.css';
+@import 'xterm/css/xterm.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.flexlayout__tabset-selected {
+  @apply border-b-2 border-sky-500;
+  background-image: unset;
+}
+/*.flexlayout__tabset_tabbar_inner_tab_container_top {*/
+/*  max-width: max-content !important;*/
+/*  overflow: hidden !important;*/
+/*}*/
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -16,10 +28,20 @@
   }
 }
 
-body {}
+body {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  overflow: hidden;
+}
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
+
+
+
