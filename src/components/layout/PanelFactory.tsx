@@ -1,50 +1,37 @@
-import React, {Suspense, lazy} from 'react';
-import {TabNode} from "flexlayout-react";
-import {PanelTypes} from "@/constants/panelTypes";
+import { PanelTypes } from '@/constants/panelTypes';
+import { TabNode } from 'flexlayout-react';
+import React, { Suspense, lazy } from 'react';
 
-const PreviewTab = lazy(() =>
-    import(
-        '../tabs/PreviewTab' /* webpackChunkName: "ApplicationsPanel" */
-        ),
+const PreviewTab = lazy(
+  () => import('../tabs/PreviewTab' /* webpackChunkName: "ApplicationsPanel" */)
 );
-const ConsoleTab = lazy(() =>
-    import(
-        '../tabs/ConsoleTab' /* webpackChunkName: "ApplicationsPanel" */
-        ),
+const ConsoleTab = lazy(
+  () => import('../tabs/ConsoleTab' /* webpackChunkName: "ApplicationsPanel" */)
 );
 
-const renderLoader = () => (
-    <div className={'center-flex'}>
-        Loading...
-    </div>
-);
+const renderLoader = () => <div className={'center-flex'}>Loading...</div>;
 
 const PanelFactory = (node: TabNode) => {
-    const panelType = node.getComponent();
+  const panelType = node.getComponent();
 
-    let component = (
-        <pre>
-			{panelType}: {JSON.stringify(node.getConfig(), null, 2)}
-		</pre>
-    );
+  let component = (
+    <pre>
+      {panelType}: {JSON.stringify(node.getConfig(), null, 2)}
+    </pre>
+  );
 
-    switch (panelType) {
+  switch (panelType) {
+    case PanelTypes.PREVIEW_TAB:
+      component = <PreviewTab />;
+      break;
+    case PanelTypes.CONSOLE:
+      component = <ConsoleTab />;
+      break;
+    default:
+      break;
+  }
 
-        case PanelTypes.PREVIEW_TAB:
-            component = <PreviewTab />;
-            break;
-        case PanelTypes.CONSOLE:
-            component = <ConsoleTab />;
-            break;
-        default:
-            break;
-    }
-
-    return (
-        <Suspense fallback={renderLoader()}>
-            {component}
-        </Suspense>
-    );
+  return <Suspense fallback={renderLoader()}>{component}</Suspense>;
 };
 
 export default PanelFactory;
