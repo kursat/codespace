@@ -1,6 +1,7 @@
 import { PanelTypes } from '@/constants/panelTypes';
 import { TabNode } from 'flexlayout-react';
 import React, { Suspense, lazy } from 'react';
+import CodeTab from "@/components/tabs/CodeTab";
 
 const PreviewTab = lazy(
   () => import('../tabs/PreviewTab' /* webpackChunkName: "ApplicationsPanel" */)
@@ -26,6 +27,9 @@ const PanelFactory = (node: TabNode) => {
       break;
     case PanelTypes.CONSOLE:
       component = <ConsoleTab />;
+      break;
+    case PanelTypes.CODE_TAB:
+      component = <CodeTab />;
       break;
     default:
       break;

@@ -1,5 +1,5 @@
-import useWebContainer from '@/hooks/useWebContainer';
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { WebContainerContext } from '@/contexts/WebContainerContext';
+import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 
@@ -9,8 +9,7 @@ const ConsoleTab = () => {
   const fitAddonRef = useRef<FitAddon | null>(null);
   const terminal = useRef<Terminal | null>(null);
 
-  const webcontainerInstance = useWebContainer();
-  console.log('webcontainerInstance: ', webcontainerInstance);
+  const { setTerminal } = useContext(WebContainerContext);
 
   useLayoutEffect(() => {
     if (fitAddonRef.current) {
@@ -30,36 +29,13 @@ const ConsoleTab = () => {
       term.open(terminalRef.current);
       fitAddon.fit();
 
-      console.log('fitAddon: ', fitAddon);
-
-      console.log('term: ', term);
       terminal.current = term;
     }
   }, []);
 
-  const asd = useCallback(async () => {
-    if (!webcontainerInstance || !terminal.current) return;
-
-    console.log('creating shell');
-    const shellProcess = await webcontainerInstance.spawn('jsh');
-
-    shellProcess.output.pipeTo(
-      new WritableStream({
-        write(data) {
-          terminal.current?.write(data);
-        },
-      })
-    );
-
-    const input = shellProcess.input.getWriter();
-    terminal.current.onData((data) => {
-      input.write(data);
-    });
-  }, [webcontainerInstance]);
-
   useEffect(() => {
-    asd();
-  }, [asd]);
+    if (terminal.current) setTerminal(terminal.current);
+  }, [setTerminal]);
 
   return (
     <div

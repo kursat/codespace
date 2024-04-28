@@ -7,14 +7,12 @@ export default function Home() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const webcontainerInstance = useWebContainer();
-
-  console.log('webcontainerInstance: ', webcontainerInstance);
+  const webContainerInstance = useWebContainer();
 
   const npmInstall = useCallback(async () => {
-    if (!webcontainerInstance) return;
+    if (!webContainerInstance) return;
 
-    const installProcess = await webcontainerInstance?.spawn('npm', [
+    const installProcess = await webContainerInstance?.spawn('npm', [
       'install',
     ]);
 
@@ -27,29 +25,29 @@ export default function Home() {
     );
 
     return installProcess.exit;
-  }, [webcontainerInstance]);
+  }, [webContainerInstance]);
 
   const mountFiles = useCallback(async () => {
-    if (webcontainerInstance) {
+    if (webContainerInstance) {
       // const snapshot = await getTutorial1();
 
       const snapshotResponse = await fetch('/api/code');
       const snapshot = await snapshotResponse.arrayBuffer();
 
-      await webcontainerInstance.mount(snapshot);
+      await webContainerInstance.mount(snapshot);
 
       if (textareaRef.current)
-        textareaRef.current.value = await webcontainerInstance.fs.readFile(
+        textareaRef.current.value = await webContainerInstance.fs.readFile(
           'src/main.tsx',
           'utf-8'
         );
     }
-  }, [webcontainerInstance]);
+  }, [webContainerInstance]);
 
   const npmStart = useCallback(async () => {
-    if (!webcontainerInstance) return;
+    if (!webContainerInstance) return;
 
-    const startProcess = await webcontainerInstance?.spawn('npm', [
+    const startProcess = await webContainerInstance?.spawn('npm', [
       'run',
       'dev',
     ]);
@@ -61,16 +59,16 @@ export default function Home() {
         },
       })
     );
-  }, [webcontainerInstance]);
+  }, [webContainerInstance]);
 
   const startBrowser = useCallback(async () => {
-    if (webcontainerInstance) {
+    if (webContainerInstance) {
       console.log('?????');
-      webcontainerInstance.on('server-ready', (port, url) => {
+      webContainerInstance.on('server-ready', (port, url) => {
         if (iframeRef.current) iframeRef.current.src = url;
       });
     }
-  }, [webcontainerInstance]);
+  }, [webContainerInstance]);
 
   useEffect(() => {
     const run = async () => {
@@ -84,10 +82,10 @@ export default function Home() {
       await startBrowser();
     };
 
-    if (webcontainerInstance) {
+    if (webContainerInstance) {
       run();
     }
-  }, [mountFiles, npmInstall, npmStart, startBrowser, webcontainerInstance]);
+  }, [mountFiles, npmInstall, npmStart, startBrowser, webContainerInstance]);
 
   return (
     <main className='flex min-h-screen items-stretch justify-stretch'>
@@ -95,7 +93,7 @@ export default function Home() {
         ref={textareaRef}
         className='flex-1 bg-sky-950 p-2 text-white'
         onChange={(e) =>
-          webcontainerInstance?.fs.writeFile('/src/main.tsx', e.target.value)
+          webContainerInstance?.fs.writeFile('/src/main.tsx', e.target.value)
         }
         defaultValue={'Loading...'}
       />

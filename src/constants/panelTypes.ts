@@ -2,6 +2,5 @@ export enum PanelTypes {
   FILE_EXPLORER = 'FILE_EXPLORER',
   CONSOLE = 'CONSOLE',
   CODE_TAB = 'CODE_TAB',
-  CODE_TABS = 'CODE_TABS',
   PREVIEW_TAB = 'PREVIEW_TAB',
 }
